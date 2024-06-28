@@ -9,15 +9,15 @@ branding:
 
 # Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
+  name:
+    description: 'Name of the person to greet'
     required: true
-    default: '1000'
+    default: 'Dino'
 
 # Define your outputs here.
 outputs:
-  time:
-    description: 'Your output description here'
+  name:
+    description: 'Test output'
 
 runs:
   using: node20

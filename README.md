@@ -169,7 +169,7 @@ steps:
     id: test-action
     uses: ./
     with:
-      milliseconds: 1000
+      name: 'Dino'
 
   - name: Print Output
     id: output
@@ -200,11 +200,11 @@ steps:
     id: test-action
     uses: actions/typescript-action@v1 # Commit with the `v1` tag
     with:
-      milliseconds: 1000
+      name: 'Dino'
 
   - name: Print Output
     id: output
-    run: echo "${{ steps.test-action.outputs.time }}"
+    run: echo "${{ steps.test-action.outputs.name }}"
 ```
 
 ## Publishing a New Release
