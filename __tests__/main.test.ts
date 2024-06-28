@@ -49,6 +49,7 @@ describe('action', () => {
       'name',
       `OUTPUT - ${name} started this action`
     );
+    expect(errorMock).not.toHaveBeenCalled();
   });
 
   it('sets failed status', async () => {
