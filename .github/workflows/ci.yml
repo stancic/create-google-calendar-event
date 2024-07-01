@@ -11,6 +11,12 @@ on:
 permissions:
   contents: read
 
+env:
+  SERVICE_ACOOUNT_CLIENT_EMAIL: ${{ secrets.SERVICE_ACOOUNT_CLIENT_EMAIL }}
+  SERVICE_ACOOUNT_CLIENT_PRIVATE_KEY:
+    ${{ secrets.SERVICE_ACOOUNT_CLIENT_PRIVATE_KEY }}
+  GOOGLE_CALENDAR_ID: ${{ secrets.GOOGLE_CALENDAR_ID }}
+
 jobs:
   test-typescript:
     name: TypeScript Tests
@@ -42,10 +48,5 @@ jobs:
 
       - name: Test
         id: npm-ci-test
-        env:
-          SERVICE_ACOOUNT_CLIENT_EMAIL:
-            ${{ secrets.SERVICE_ACOOUNT_CLIENT_EMAIL }}
-          SERVICE_ACOOUNT_CLIENT_PRIVATE_KEY:
-            ${{ secrets.SERVICE_ACOOUNT_CLIENT_PRIVATE_KEY }}
-          GOOGLE_CALENDAR_ID: ${{ secrets.GOOGLE_CALENDAR_ID }}
+
         run: npm run ci-test
