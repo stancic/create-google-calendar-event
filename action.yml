@@ -4,8 +4,8 @@ author: 'stancic'
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
-  icon: 'heart'
-  color: 'red'
+  icon: 'calendar'
+  color: 'blue'
 
 # Define your inputs here.
 inputs:
