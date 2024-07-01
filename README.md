@@ -47,7 +47,7 @@ The link to the created event which leads you to the calendar directly.
 
 ```yaml
 ---
-uses: actions/create-google-calendar-event@v1
+uses: stancic/create-google-calendar-event@v1
 with:
   service_account_client_email: ${{ secrets.SERVICE_ACCOUNT_CLIENT_EMAIL }}
   service_account_client_private_key:
