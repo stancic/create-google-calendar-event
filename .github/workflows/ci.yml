@@ -22,13 +22,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Make envfile
-        uses: SpicyPizza/create-envfile@v2.0
+        uses: tmshkr/handle-env@v1.2
         with:
-          envkey_SERVICE_ACOOUNT_CLIENT_EMAIL:
-            ${{ secrets.SERVICE_ACOOUNT_CLIENT_EMAIL }}
-          envkey_SERVICE_ACOOUNT_CLIENT_PRIVATE_KEY:
-            ${{  secrets.SERVICE_ACOOUNT_CLIENT_PRIVATE_KEY }}
-          envkey_GOOGLE_CALENDAR_ID: ${{ secrets.GOOGLE_CALENDAR_ID }}
+          env: |
+            SERVICE_ACOOUNT_CLIENT_EMAIL=${{ secrets.SERVICE_ACOOUNT_CLIENT_EMAIL }}
+            SERVICE_ACOOUNT_CLIENT_PRIVATE_KEY=${{  secrets.SERVICE_ACOOUNT_CLIENT_PRIVATE_KEY }}
+            GOOGLE_CALENDAR_ID=${{ secrets.GOOGLE_CALENDAR_ID }}
 
       - name: Setup Node.js
         id: setup-node
