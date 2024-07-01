@@ -1,0 +1,31 @@
+name: Test Action On Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  google-calendar-event:
+    name: Google Calendar Event
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Create Google Calendar Event
+        id: create-event
+        uses: ./
+        with:
+          service_account_client_email:
+            ${{ secrets.SERVICE_ACCOUNT_CLIENT_EMAIL }}
+          service_account_client_private_key:
+            ${{ secrets.SERVICE_ACCOUNT_CLIENT_PRIVATE_KEY }}
+          calendar_id: ${{ secrets.GOOGLE_CALENDAR_ID }}
+          summary: ${{ github.event.release.name }}
+          description: ${{ github.event.release.body }}
+
+      - name: Print Output
+        id: output
+        run: echo "${{ steps.create-event.outputs.name }}"

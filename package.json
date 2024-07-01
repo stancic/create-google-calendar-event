@@ -33,7 +33,8 @@
     "package": "npx ncc build src/index.ts -o dist --source-map --license licenses.txt",
     "package:watch": "npm run package -- --watch",
     "test": "npx jest",
-    "all": "npm run format:write && npm run lint && npm run test && npm run coverage && npm run package"
+    "all": "npm run format:write && npm run lint && npm run test && npm run coverage && npm run package",
+    "google-api-auth": "ts-node ./src/index.ts"
   },
   "license": "MIT",
   "jest": {
@@ -41,6 +42,10 @@
     "verbose": true,
     "clearMocks": true,
     "testEnvironment": "node",
+    "rootDir": "./",
+    "modulePaths": [
+      "<rootDir>"
+    ],
     "moduleFileExtensions": [
       "js",
       "ts"
@@ -66,7 +71,11 @@
     ]
   },
   "dependencies": {
-    "@actions/core": "^1.10.1"
+    "@actions/core": "^1.10.1",
+    "@google-cloud/local-auth": "^2.1.0",
+    "dotenv": "^16.4.5",
+    "googleapis": "^105.0.0",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",

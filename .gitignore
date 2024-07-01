@@ -68,6 +68,7 @@ typings/
 # dotenv environment variables file
 .env
 .env.test
+service-account-credentials.*
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

@@ -11,6 +11,12 @@ describe('index', () => {
   it('calls run when imported', async () => {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     require('../src/index');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require('../src/models/index');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require('../src/services/index');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require('../src/types/index');
 
     expect(runMock).toHaveBeenCalled();
   });
