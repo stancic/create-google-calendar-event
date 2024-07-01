@@ -36,10 +36,6 @@ inputs:
 
 # Define your outputs here.
 outputs:
-  event_title:
-    description: 'Event title'
-  event_description:
-    description: 'Event description'
   event_link:
     description: 'Event link'
 
