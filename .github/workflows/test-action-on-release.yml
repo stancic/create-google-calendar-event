@@ -28,4 +28,8 @@ jobs:
 
       - name: Print Output
         id: output
-        run: echo "${{ steps.create-event.outputs.response }}"
+        run: |
+          response="${{ steps.create-event.outputs.response }}"
+          cat <<EOF
+            $response
+          EOF
