@@ -1,78 +1,139 @@
-/**
- * Unit tests for the action's main functionality, src/main.ts
- *
- * These should be run as if the action was called from a workflow.
- * Specifically, the inputs listed in `action.yml` should be set as environment
- * variables following the pattern `INPUT_<INPUT_NAME>`.
- */
-
 import * as core from '@actions/core';
-import * as main from '../src/main';
+import { run } from '../src/main';
+import { GoogleApiAuthService } from '../src/services';
 
-// Mock the action's main function
-const runMock = jest.spyOn(main, 'run');
+jest.mock('@actions/core');
+jest.mock('../src/services');
 
-// Other utilities
-// Mock the GitHub Actions core library
-let errorMock: jest.SpiedFunction<typeof core.error>;
-let getInputMock: jest.SpiedFunction<typeof core.getInput>;
-let setFailedMock: jest.SpiedFunction<typeof core.setFailed>;
+describe('api consuming', () => {
+  const mockGetInput = core.getInput as jest.MockedFunction<
+    typeof core.getInput
+  >;
+  const mockSetFailed = core.setFailed as jest.MockedFunction<
+    typeof core.setFailed
+  >;
+  const mockSetOutput = core.setOutput as jest.MockedFunction<
+    typeof core.setOutput
+  >;
+  const mockDebug = core.debug as jest.MockedFunction<typeof core.debug>;
 
-describe('action', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-
-    errorMock = jest.spyOn(core, 'error').mockImplementation();
-    getInputMock = jest.spyOn(core, 'getInput').mockImplementation();
-    setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation();
   });
 
-  it('run action with all env variables', async () => {
-    getInputMock.mockImplementation((prop: string) => {
-      switch (prop) {
+  it('should run the action successfully with valid inputs', async () => {
+    mockGetInput.mockImplementation((name: string) => {
+      switch (name) {
         case 'service_account_client_email':
-          return process.env.SERVICE_ACOOUNT_CLIENT_EMAIL ?? '';
+          return 'test@example.com';
         case 'service_account_client_private_key':
-          return process.env.SERVICE_ACOOUNT_CLIENT_PRIVATE_KEY ?? '';
+          return 'private_key';
         case 'calendar_id':
-          return process.env.GOOGLE_CALENDAR_ID ?? '';
+          return 'calendar_id';
         case 'summary':
           return 'Release v1.0.0';
         case 'description':
-          return `
-            ## What's Changed
-            * Test Feature by @stancic in https://github.com/stancic/create-google-calendar-event/pull/1
-            * Test Feature by @stancic in https://github.com/stancic/create-google-calendar-event/pull/1
-            * Test Feature by @stancic in https://github.com/stancic/create-google-calendar-event/pull/1
-            * Test Feature by @stancic in https://github.com/stancic/create-google-calendar-event/pull/1
-
-
-            **Full Changelog**: https://github.com/github.com/stancic/create-google-calendar-event/compare/v1.0.0...v0.0.0
-          `;
+          return 'Description of the event';
         default:
           return '';
       }
     });
 
-    await main.run();
-    expect(runMock).toHaveReturned();
-    expect(errorMock).not.toHaveBeenCalled();
+    const mockInsertEvent = jest.fn().mockResolvedValue({
+      data: { htmlLink: 'https://www.google.com/calendar/event?eid=123' }
+    });
+    (GoogleApiAuthService as jest.Mock).mockImplementation(() => ({
+      insertEvent: mockInsertEvent
+    }));
+
+    await run();
+
+    expect(mockDebug).toHaveBeenCalledWith(
+      'Service Account Client Email: test@example.com'
+    );
+    expect(mockDebug).toHaveBeenCalledWith(
+      'Service Account Client Private Key: private_key'
+    );
+    expect(mockDebug).toHaveBeenCalledWith('Calendar ID: calendar_id');
+    expect(mockDebug).toHaveBeenCalledWith(
+      'Creating Google Calendar Auth Client'
+    );
+    expect(mockSetOutput).toHaveBeenCalledWith(
+      'event_link',
+      'You can see your event here: https://www.google.com/calendar/event?eid=123'
+    );
+    expect(mockSetFailed).not.toHaveBeenCalled();
   });
 
-  it('sets failed status', async () => {
-    getInputMock.mockImplementation(prop => {
-      switch (prop) {
+  it('should throw and handle error when response is an instance of Error', async () => {
+    mockGetInput.mockImplementation((name: string) => {
+      switch (name) {
         case 'service_account_client_email':
+          return 'test@example.com';
+        case 'service_account_client_private_key':
+          return 'private_key';
+        case 'calendar_id':
+          return 'calendar_id';
+        case 'summary':
+          return 'Release v1.0.0';
+        case 'description':
+          return 'Description of the event';
+        default:
+          return '';
+      }
+    });
+
+    const mockInsertEvent = jest
+      .fn()
+      .mockRejectedValue(new Error('Test error'));
+    (GoogleApiAuthService as jest.Mock).mockImplementation(() => ({
+      insertEvent: mockInsertEvent
+    }));
+
+    await run();
+
+    expect(mockSetFailed).toHaveBeenCalledWith('Test error');
+  });
+
+  it('should fail if service_account_client_private_key is missing', async () => {
+    mockGetInput.mockImplementation((name: string) => {
+      switch (name) {
+        case 'service_account_client_email':
+          return 'test@example.com';
+        case 'service_account_client_private_key':
+          return '';
+        case 'calendar_id':
+          return 'calendar_id';
+        default:
+          return '';
+      }
+    });
+
+    await run();
+
+    expect(mockSetFailed).toHaveBeenCalledWith(
+      'You must provide a service account client private key.'
+    );
+  });
+
+  it('should fail if calendar_id is missing', async () => {
+    mockGetInput.mockImplementation((name: string) => {
+      switch (name) {
+        case 'service_account_client_email':
+          return 'test@example.com';
+        case 'service_account_client_private_key':
+          return 'private_key';
+        case 'calendar_id':
           return '';
         default:
           return '';
       }
     });
 
-    await main.run();
-    expect(runMock).toHaveReturned();
-    expect(setFailedMock).toHaveBeenCalledWith(
-      'You must provide a service account client email.'
+    await run();
+
+    expect(mockSetFailed).toHaveBeenCalledWith(
+      'You must provide Google Calendar ID.'
     );
   });
 });
