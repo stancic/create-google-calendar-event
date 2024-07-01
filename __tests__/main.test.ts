@@ -18,7 +18,6 @@ let debugMock: jest.SpiedFunction<typeof core.debug>;
 let errorMock: jest.SpiedFunction<typeof core.error>;
 let getInputMock: jest.SpiedFunction<typeof core.getInput>;
 let setFailedMock: jest.SpiedFunction<typeof core.setFailed>;
-let setOutputMock: jest.SpiedFunction<typeof core.setOutput>;
 
 describe('action', () => {
   beforeEach(() => {
@@ -28,15 +27,30 @@ describe('action', () => {
     errorMock = jest.spyOn(core, 'error').mockImplementation();
     getInputMock = jest.spyOn(core, 'getInput').mockImplementation();
     setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation();
-    setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation();
   });
 
   it('sets the name output', async () => {
-    const name = 'Dino';
     getInputMock.mockImplementation((prop: string) => {
       switch (prop) {
-        case 'name':
-          return name;
+        case 'service_account_client_email':
+          return process.env.GOOGLE_CLIENT_EMAIL ?? '';
+        case 'service_account_client_private_key':
+          return process.env.GOOGLE_CLIENT_PRIVATE_KEY ?? '';
+        case 'calendar_id':
+          return process.env.GOOGLE_CALENDAR_ID ?? '';
+        case 'summary':
+          return 'Release v1.0.0';
+        case 'description':
+          return `
+            ## What's Changed
+            * Test Feature by @stancic in https://github.com/stancic/create-google-calendar-event/pull/1
+            * Test Feature by @stancic in https://github.com/stancic/create-google-calendar-event/pull/1
+            * Test Feature by @stancic in https://github.com/stancic/create-google-calendar-event/pull/1
+            * Test Feature by @stancic in https://github.com/stancic/create-google-calendar-event/pull/1
+
+
+            **Full Changelog**: https://github.com/github.com/stancic/create-google-calendar-event/compare/v1.0.0...v0.0.0
+          `;
         default:
           return '';
       }
@@ -44,10 +58,8 @@ describe('action', () => {
 
     await main.run();
     expect(runMock).toHaveReturned();
-    expect(debugMock).toHaveBeenCalledWith(`DEBUG MESSAGE for ${name}`);
-    expect(setOutputMock).toHaveBeenCalledWith(
-      'name',
-      `OUTPUT - ${name} started this action`
+    expect(debugMock).toHaveBeenCalledWith(
+      'Creating Google Calendar Auth Client'
     );
     expect(errorMock).not.toHaveBeenCalled();
   });
@@ -55,7 +67,7 @@ describe('action', () => {
   it('sets failed status', async () => {
     getInputMock.mockImplementation(prop => {
       switch (prop) {
-        case 'name':
+        case 'service_account_client_email':
           return '';
         default:
           return '';
@@ -64,7 +76,8 @@ describe('action', () => {
 
     await main.run();
     expect(runMock).toHaveReturned();
-
-    expect(setFailedMock).toHaveBeenCalledWith('You must provide a name');
+    expect(setFailedMock).toHaveBeenCalledWith(
+      'You must provide a service account client email.'
+    );
   });
 });
