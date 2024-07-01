@@ -36,8 +36,12 @@ inputs:
 
 # Define your outputs here.
 outputs:
-  response:
-    description: 'Google API response'
+  event_title:
+    description: 'Event title'
+  event_description:
+    description: 'Event description'
+  event_link:
+    description: 'Event link'
 
 runs:
   using: node20
