@@ -1,6 +1,6 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Create Google Calendar Event'
+description: 'Create a Google Calendar event from a GitHub Action'
+author: 'stancic'
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
@@ -9,15 +9,35 @@ branding:
 
 # Define your inputs here.
 inputs:
-  name:
-    description: 'Name of the person to greet'
+  service_account_client_email:
+    description:
+      'Service Account Client Email from the GCP JSON file -> "client_email"
+      field'
     required: true
-    default: 'Dino'
+    default: ''
+  service_account_client_private_key:
+    description:
+      'Service Account Private Key from the GCP JSON file -> "private_key" field'
+    required: true
+    default: ''
+  calendar_id:
+    description: 'Calendar ID from the Google Calendar Settings'
+    required: true
+    default: ''
+  summary:
+    description: 'Event summary - It will show up as the title of the event'
+    required: true
+    default: ''
+  description:
+    description:
+      'Event description - It will show up as the description of the event'
+    required: true
+    default: ''
 
 # Define your outputs here.
 outputs:
-  name:
-    description: 'Test output'
+  response:
+    description: 'Google API response'
 
 runs:
   using: node20
