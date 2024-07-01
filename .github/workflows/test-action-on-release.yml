@@ -29,5 +29,6 @@ jobs:
       - name: Print Output
         id: output
         run: |
-          printf '%s\n' "${{ steps.create-event.outputs.response }}"
-
+          printf '%s\n' "${{ steps.create-event.outputs.event_title }}"
+          printf '%s\n' "${{ steps.create-event.outputs.event_description }}"
+          printf '%s\n' "${{ steps.create-event.outputs.event_link }}"

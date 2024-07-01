@@ -52,8 +52,16 @@ export async function run(): Promise<void> {
     const response = await googleAuthClient.insertEvent(summary, description);
     if (response instanceof Error) throw response;
     core.setOutput(
-      'response',
-      `Event created: ${JSON.stringify(response.data)}`
+      'event_title',
+      `Event with title: "${response.data.summary}" has been added to your Google Calendar.`
+    );
+    core.setOutput(
+      'event_description',
+      `Event with description: "${response.data.description}" has been added to your Google Calendar.`
+    );
+    core.setOutput(
+      'event_link',
+      `You can see your event here: "${response.data.htmlLink}"`
     );
   } catch (error) {
     // Fail the workflow run if an error occurs
