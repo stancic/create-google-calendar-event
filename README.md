@@ -24,7 +24,7 @@ in the GitHub repository.
 
 ### `calendar_id`
 
-**Required** The id of the calendar where the event will be created. You can
+**Required** The ID of the calendar where the event will be created. You can
 find it in the calendar settings. This is something that I pass as a secret in
 the GitHub repository.
 
