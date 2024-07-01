@@ -22,13 +22,16 @@ inputs:
     default: ''
   calendar_id:
     description: 'Calendar ID from the Google Calendar Settings'
+    required: true
     default: ''
   summary:
     description: 'Event summary - It will show up as the title of the event'
+    required: true
     default: ''
   description:
     description:
       'Event description - It will show up as the description of the event'
+    required: true
     default: ''
 
 # Define your outputs here.

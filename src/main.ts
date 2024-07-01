@@ -33,9 +33,9 @@ export async function run(): Promise<void> {
 
     core.debug('Creating Google Calendar Auth Client');
     const googleAuthClient = new GoogleApiAuthService({
-      serviceAccountClientEmail,
-      serviceAccountClientPrivateKey,
-      calendarId
+      serviceAccountClientEmail: serviceAccountClientEmail,
+      serviceAccountClientPrivateKey: serviceAccountClientPrivateKey,
+      calendarId: calendarId
     });
 
     const response = await googleAuthClient.insertEvent(summary, description);
