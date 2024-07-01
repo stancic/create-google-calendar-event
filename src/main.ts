@@ -31,6 +31,11 @@ export async function run(): Promise<void> {
       throw new Error('You must provide Google Calendar ID.');
     }
 
+    core.debug(`Service Account Client Email: ${serviceAccountClientEmail}`);
+    core.debug(
+      `Service Account Client Private Key: ${serviceAccountClientPrivateKey}`
+    );
+    core.debug(`Calendar ID: ${calendarId}`);
     core.debug('Creating Google Calendar Auth Client');
     const googleAuthClient = new GoogleApiAuthService({
       serviceAccountClientEmail,
