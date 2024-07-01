@@ -33,9 +33,9 @@ describe('action', () => {
     getInputMock.mockImplementation((prop: string) => {
       switch (prop) {
         case 'service_account_client_email':
-          return process.env.GOOGLE_CLIENT_EMAIL ?? '';
+          return process.env.SERVICE_ACOOUNT_CLIENT_EMAIL ?? '';
         case 'service_account_client_private_key':
-          return process.env.GOOGLE_CLIENT_PRIVATE_KEY ?? '';
+          return process.env.SERVICE_ACOOUNT_CLIENT_PRIVATE_KEY ?? '';
         case 'calendar_id':
           return process.env.GOOGLE_CALENDAR_ID ?? '';
         case 'summary':
