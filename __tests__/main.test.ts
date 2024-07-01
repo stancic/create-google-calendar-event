@@ -29,7 +29,7 @@ describe('action', () => {
     setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation();
   });
 
-  it('sets the name output', async () => {
+  it('run action with all env variables', async () => {
     getInputMock.mockImplementation((prop: string) => {
       switch (prop) {
         case 'service_account_client_email':

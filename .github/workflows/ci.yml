@@ -18,6 +18,18 @@ env:
   GOOGLE_CALENDAR_ID: ${{ secrets.GOOGLE_CALENDAR_ID }}
 
 jobs:
+  create-envfile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          envkey_SERVICE_ACOOUNT_CLIENT_EMAIL:
+            ${{ env.SERVICE_ACOOUNT_CLIENT_EMAIL }}
+          envkey_SERVICE_ACOOUNT_CLIENT_PRIVATE_KEY:
+            ${{ env.SERVICE_ACOOUNT_CLIENT_PRIVATE_KEY }}
+          envkey_GOOGLE_CALENDAR_ID: ${{ env.GOOGLE_CALENDAR_ID }}
+
   test-typescript:
     name: TypeScript Tests
     runs-on: ubuntu-latest
