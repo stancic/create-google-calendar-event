@@ -46,8 +46,7 @@ The link to the created event which leads you to the calendar directly.
 ## Example usage
 
 ```yaml
-...
-
+---
 uses: actions/create-google-calendar-event@v1
 with:
   service_account_client_email: ${{ secrets.SERVICE_ACCOUNT_CLIENT_EMAIL }}
@@ -56,8 +55,6 @@ with:
   calendar_id: ${{ secrets.GOOGLE_CALENDAR_ID }}
   summary: ${{ github.event.release.name }}
   description: ${{ github.event.release.body }}
-
-...
 ```
 
 ### Disclaimer
