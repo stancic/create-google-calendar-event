@@ -1,0 +1,38 @@
+name: Dependabot Auto-Merge
+
+on:
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    name: Approve and merge Dependabot PRs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Auto-merge Dependabot PRs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          prs=$(gh pr list \
+            --repo "$GITHUB_REPOSITORY" \
+            --author "app/dependabot" \
+            --state open \
+            --json number,title \
+            --jq '.[].number')
+
+          if [ -z "$prs" ]; then
+            echo "No open Dependabot PRs found."
+            exit 0
+          fi
+
+          for pr in $prs; do
+            echo "Processing PR #$pr..."
+            gh pr review "$pr" --repo "$GITHUB_REPOSITORY" --approve || true
+            gh pr merge "$pr" --repo "$GITHUB_REPOSITORY" --squash --auto || true
+          done
